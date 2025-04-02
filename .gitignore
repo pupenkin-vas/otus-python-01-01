@@ -1,0 +1,12 @@
+# APP-BASED DIRS
+LOG_DIR/*
+REPORT_DIR/*
+
+# APP-BASED FILES
+report-*.html
+nginx-access-ui*
+*.json
+
+# PYTHON-STUFF
+__pycache__/
+venv/
