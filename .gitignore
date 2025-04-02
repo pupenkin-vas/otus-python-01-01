@@ -6,6 +6,7 @@ REPORT_DIR/*
 report-*.html
 nginx-access-ui*
 *.json
+custom_config.ini
 
 # PYTHON-STUFF
 __pycache__/
