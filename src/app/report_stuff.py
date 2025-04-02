@@ -3,9 +3,6 @@ import string
 
 from datetime import datetime
 
-REPORT_DIR = "./REPORT_DIR"
-REPORT_TEMPLATE_PATH = './report.html'
-
 
 def pretty_digitizer(digit):
     """Function to transform ugly-non-human to readable"""
@@ -31,14 +28,14 @@ def prepare_data(log_data):
     return result
 
 
-def form_report(data_result):
+def form_report(data_result, report_dir, report_template_path):
     """Function, that get a list, born a report and write it on disk"""
-    with open(REPORT_TEMPLATE_PATH, 'r') as file:
+    with open(report_template_path, 'r') as file:
         template_file = file.read()
     template = string.Template(template_file)
     html_report = template.safe_substitute(table_json=data_result)
     current_date = datetime.now().strftime('%Y.%m.%d')
-    report_file_path = f'{REPORT_DIR}/report-{current_date}.html'
+    report_file_path = f'{report_dir}/report-{current_date}.html'
 
     with open(report_file_path, 'w', encoding='utf-8') as f:
         f.write(html_report)
