@@ -38,8 +38,8 @@ def check_all_vars_set(available_vars):
     logger.info("Try to compare AVAILABLE and REQUIRED variables")
     if missing_vars:
         logger.error(f"Required variable(-s) missing: "
-                            f"{', '.join(missing_vars)}"
-                            )
+                     f"{', '.join(missing_vars)}"
+                     )
         return False
     logger.info("All REQUIRED variables available")
     return True
