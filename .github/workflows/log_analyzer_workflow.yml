@@ -24,7 +24,7 @@ jobs:
       - name: Run linters
         run: |
           black --check --line-length=79 .
-          isort --check-only .
+          isort --check --profile black .
 
       - name: Run mypy
         run: |
