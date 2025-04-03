@@ -1,6 +1,6 @@
 # APP-BASED DIRS
-LOG_DIR/*
-REPORT_DIR/*
+LOG_DIR/
+REPORT_DIR/
 
 # APP-BASED FILES
 report-*.html
