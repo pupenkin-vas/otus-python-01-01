@@ -1,20 +1,14 @@
 import argparse
 import sys
 
-from src.app.config import (
-    read_config,
-    check_all_vars_set,
-    check_config_exists)
+from src.app.config import check_all_vars_set, check_config_exists, read_config
 from src.app.log_stuff import (
+    get_date_from_filename,
     get_latest_log_file_name,
     process_log,
-    get_date_from_filename)
-from src.app.report_stuff import (
-    prepare_data,
-    form_report
 )
-from src.app.logging_config import configure_logger, cleanup_logger
-
+from src.app.logging_config import cleanup_logger, configure_logger
+from src.app.report_stuff import form_report, prepare_data
 
 config = "default_config.ini"
 
@@ -32,8 +26,9 @@ def main():
         logger.error(f"Error while reading {config}: e")
         raise e
 
-    parser = argparse.ArgumentParser(description="Script to parse logs "
-                                                 "(custom config included)")
+    parser = argparse.ArgumentParser(
+        description="Script to parse logs " "(custom config included)"
+    )
     parser.add_argument("--config", help="Path to extra config file")
     args = parser.parse_args()
     if args.config and check_config_exists(args.config):
@@ -43,9 +38,11 @@ def main():
     missing_vars = check_all_vars_set(config_dict.keys())
 
     if missing_vars:
-        logger.error("Error while reading config: "
-                     "Missing required variable(s): "
-                     f"{', '.join(missing_vars)}")
+        logger.error(
+            "Error while reading config: "
+            "Missing required variable(s): "
+            f"{', '.join(missing_vars)}"
+        )
         sys.exit(1)
 
     logger.info("All REQUIRED variables available")
@@ -56,9 +53,7 @@ def main():
     if "app_log_path" in config_dict.keys():
         cleanup_logger(__name__)
         app_log_path = config_dict["app_log_path"]
-        logger = configure_logger(
-            __name__,
-            log_file=app_log_path)
+        logger = configure_logger(__name__, log_file=app_log_path)
 
     logger.info(f"Searching recent log in {log_dir}")
     try:
@@ -67,8 +62,7 @@ def main():
         log_data = get_date_from_filename(log_file)
         logger.info(f"Log data: {log_data}")
     except Exception as e:
-        logger.error("Error while searching "
-                     f"recent log: {e}")
+        logger.error("Error while searching " f"recent log: {e}")
         sys.exit(1)
 
     log_file_path = f"{log_dir}/{log_file}"
@@ -77,8 +71,9 @@ def main():
         result = process_log(log_file_path)
         logger.info(f"Processing {log_file_path} complete")
     except Exception as e:
-        logger.error("Error while processing "
-                     f"log_file {log_file_path}: {e}")
+        logger.error(
+            "Error while processing " f"log_file {log_file_path}: {e}"
+        )
         sys.exit(1)
 
     logger.info("Preparing report")
@@ -90,11 +85,11 @@ def main():
             report_data,
             report_dir=report_dir,
             report_template_path=report_template_path,
-            log_data=log_data)
+            log_data=log_data,
+        )
         logger.info("Report is ready")
     except Exception as e:
-        logger.error("Error while preparing "
-                     f"report: {e}")
+        logger.error("Error while preparing " f"report: {e}")
         sys.exit(1)
 
 

@@ -3,23 +3,26 @@ import os
 import re
 
 FILE_NAME_REGEX = re.compile(r"^nginx-access-ui\.log-(\d{8})(\.gz)?$")
-LOG_LINE_REGEX = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # addr
-                            r"\s(.*?)\s(.*?)"  # $remote_user $http_x_real_ip
-                            r"\s\[(\d{1,2}\/[A-Za-z]{3}\/\d{4}"  # day
-                            r":\d{2}:\d{2}:\d{2}\s[+\-]\d{4})\]"  # time
-                            r"\s\"(.*?)\s(.*?)\s(.*?)\""  # "request"
-                            r"\s(\d+)\s(\d+)\s\"(.*?)\""  # status sent ...
-                            r"\s\"(.*?)\"\s\"(.*?)\"\s\"(.*?)\"\s\"(.*?)\""
-                            r"\s(\d+\.\d+)$")  # request_time
+LOG_LINE_REGEX = re.compile(
+    r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # addr
+    r"\s(.*?)\s(.*?)"  # $remote_user $http_x_real_ip
+    r"\s\[(\d{1,2}\/[A-Za-z]{3}\/\d{4}"  # day
+    r":\d{2}:\d{2}:\d{2}\s[+\-]\d{4})\]"  # time
+    r"\s\"(.*?)\s(.*?)\s(.*?)\""  # "request"
+    r"\s(\d+)\s(\d+)\s\"(.*?)\""  # status sent ...
+    r"\s\"(.*?)\"\s\"(.*?)\"\s\"(.*?)\"\s\"(.*?)\""
+    r"\s(\d+\.\d+)$"
+)  # request_time
 
 
 def get_latest_log_file_name(log_dir, name_regex=FILE_NAME_REGEX):
     """Function to get most recent log filename"""
     try:
         return max(
-                f_name for f_name in os.listdir(log_dir)
-                if name_regex.match(f_name)
-                )
+            f_name
+            for f_name in os.listdir(log_dir)
+            if name_regex.match(f_name)
+        )
     except Exception as e:
         raise e
 
@@ -50,9 +53,11 @@ def parse_log_content(log_file, line_regex=LOG_LINE_REGEX):
                 if url not in log_entries:
                     log_entries[url] = []
                 log_entries[url].append(request_time)
-        return {'log_entries': log_entries,
-                'total_requests': total_requests,
-                'total_request_time': total_request_time}
+        return {
+            "log_entries": log_entries,
+            "total_requests": total_requests,
+            "total_request_time": total_request_time,
+        }
     except Exception as e:
         raise e
 
@@ -61,7 +66,7 @@ def process_log(log_filename):
     """Head function ('extract' log content, make it parsed)"""
     opener = gzip.open if log_filename.endswith(".gz") else open
     try:
-        with opener(log_filename, 'rt') as f:
+        with opener(log_filename, "rt") as f:
             log_data = parse_log_content(f)
             if not log_data:
                 return None

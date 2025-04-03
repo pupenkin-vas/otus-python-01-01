@@ -1,10 +1,12 @@
 import configparser
 import os
 
-required_vars_set = {'log_dir',
-                     'report_dir',
-                     'report_size',
-                     'report_template_path'}
+required_vars_set = {
+    "log_dir",
+    "report_dir",
+    "report_size",
+    "report_template_path",
+}
 
 
 def check_config_exists(filename):
@@ -20,7 +22,7 @@ def read_config(config_path):
     config = configparser.ConfigParser()
     try:
         config.read(config_path)
-        variables = dict(config['DEFAULT'])
+        variables = dict(config["DEFAULT"])
         return variables
     except Exception as e:
         raise e

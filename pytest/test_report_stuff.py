@@ -1,7 +1,4 @@
-from src.app.report_stuff import (
-    pretty_digitizer,
-    prepare_data,
-)
+from src.app.report_stuff import prepare_data, pretty_digitizer
 
 
 def test_pretty_digitizer():
@@ -17,8 +14,8 @@ def test_prepare_data():
         "total_request_time": 10,
         "log_entries": {
             "http://buba.com": [1, 2, 3],
-            "http://biba.com": [2, 2]
-        }
+            "http://biba.com": [2, 2],
+        },
     }
 
     expected_result = [
@@ -30,7 +27,7 @@ def test_prepare_data():
             "time_perc": "0.600000",
             "time_avg": "2.000000",
             "time_max": "3.000000",
-            "time_med": "2.000000"
+            "time_med": "2.000000",
         },
         {
             "url": "http://biba.com",
@@ -40,10 +37,15 @@ def test_prepare_data():
             "time_perc": "0.400000",
             "time_avg": "2.000000",
             "time_max": "2.000000",
-            "time_med": "2.000000"
-        }
+            "time_med": "2.000000",
+        },
     ]
 
-    result = prepare_data(log_data)
+    report_size = 2
+    result = prepare_data(log_data, report_size)
     assert result == expected_result
 
+    report_size = 1
+    expected_result_single = [expected_result[0]]
+    result_single = prepare_data(log_data, report_size)
+    assert result_single == expected_result_single

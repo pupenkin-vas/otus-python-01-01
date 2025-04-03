@@ -1,5 +1,6 @@
 import logging
 import os
+
 import structlog
 
 
@@ -16,7 +17,6 @@ def configure_logger(app_name, log_level=logging.INFO, log_file=None):
         wrapper_class=structlog.stdlib.BoundLogger,
         context_class=dict,
         logger_factory=structlog.stdlib.LoggerFactory(),
-
     )
 
     logger = structlog.get_logger(app_name)
