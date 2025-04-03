@@ -2,10 +2,6 @@ import gzip
 import os
 import re
 
-from .logging_config import configure_logger
-
-logger = configure_logger(__name__)
-
 FILE_NAME_REGEX = re.compile(r"^nginx-access-ui\.log-(\d{8})(\.gz)?$")
 LOG_LINE_REGEX = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # addr
                             r"\s(.*?)\s(.*?)"  # $remote_user $http_x_real_ip
@@ -20,21 +16,22 @@ LOG_LINE_REGEX = re.compile(r"^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # addr
 def get_latest_log_file_name(log_dir, name_regex=FILE_NAME_REGEX):
     """Function to get most recent log filename"""
     try:
-        logger.info(f"Searching recent log in {log_dir}")
         return max(
-            f_name for f_name in os.listdir(log_dir)
-            if name_regex.match(f_name)
-            )
+                f_name for f_name in os.listdir(log_dir)
+                if name_regex.match(f_name)
+                )
     except Exception as e:
-        logger.error(f"Error while searching recent log in {log_dir}: {e}")
+        raise e
 
 
 def get_date_from_filename(filename):
     """Function to extract date from filename"""
-    match = FILE_NAME_REGEX.match(filename)
-    log_date = match.group(1)
-    logger.info(f"Log data: {log_date}")
-    return log_date
+    try:
+        match = FILE_NAME_REGEX.match(filename)
+        log_date = match.group(1)
+        return log_date
+    except Exception as e:
+        raise e
 
 
 def parse_log_content(log_file, line_regex=LOG_LINE_REGEX):
@@ -42,27 +39,28 @@ def parse_log_content(log_file, line_regex=LOG_LINE_REGEX):
     log_entries = {}
     total_requests = 0
     total_request_time = 0
-    for line in log_file:
-        match = re.match(line_regex, line)
-        if match:
-            url = match.group(6)
-            request_time = float(match.group(15))
-            total_requests += 1
-            total_request_time += request_time
-            if url not in log_entries:
-                log_entries[url] = []
-            log_entries[url].append(request_time)
-    logger.info(f"log_file parsed. Requests: {total_requests}")
-    return {'log_entries': log_entries,
-            'total_requests': total_requests,
-            'total_request_time': total_request_time}
+    try:
+        for line in log_file:
+            match = re.match(line_regex, line)
+            if match:
+                url = match.group(6)
+                request_time = float(match.group(15))
+                total_requests += 1
+                total_request_time += request_time
+                if url not in log_entries:
+                    log_entries[url] = []
+                log_entries[url].append(request_time)
+        return {'log_entries': log_entries,
+                'total_requests': total_requests,
+                'total_request_time': total_request_time}
+    except Exception as e:
+        raise e
 
 
 def process_log(log_filename):
     """Head function ('extract' log content, make it parsed)"""
     opener = gzip.open if log_filename.endswith(".gz") else open
     try:
-        logger.info(f"Processing {log_filename}")
         with opener(log_filename, 'rt') as f:
             log_data = parse_log_content(f)
             if not log_data:
@@ -70,5 +68,4 @@ def process_log(log_filename):
 
             return log_data
     except Exception as e:
-        logger.error(f"Error while processing {log_filename}: {e}")
-        return None
+        raise e
