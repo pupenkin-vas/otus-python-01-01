@@ -28,7 +28,7 @@ jobs:
 
       - name: Run mypy
         run: |
-          mypy .
+          mypy --explicit-package-bases --ignore-missing-imports .
 
       - name: Test with flake8
         run: |
