@@ -1,12 +1,15 @@
 name: Log Analyzer Workflow
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - prototype
+
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    name: PEP8 check
+    name: Lint code
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -36,6 +39,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    name: Test code
     needs: lint
     steps:
       - name: Checkout code
