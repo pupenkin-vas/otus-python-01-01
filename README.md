@@ -1,7 +1,7 @@
 # LOG_ANALYZER
 Парсер логов, с дальнейшим формированием отчета в html-файл. Работает как с raw-файлами, так и с .gz-архивами
 ## Pre-requisities:
-1) установить зависимости в окружение (./requirements.txt)
+1) установить зависимости в окружение (./requirements.txt / pyproject.toml)
 2) доступна настройка для:
 - __report_template_path__ - путь до шаблона (default: "./report.html")
 - __report_size__ - количество URL'ов в отчете (default: "1000")
@@ -16,7 +16,7 @@
 - подождать
 - забрать готовый отчет в __$report_dir__
 ### Stack:
-1. Python 3.6+
+1. Python 3.9+
 2. Structlog
 3. Pytest
 ### Contributors:

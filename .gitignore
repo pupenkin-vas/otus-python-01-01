@@ -13,6 +13,7 @@ custom_config.ini
 __pycache__/
 venv/
 .pytest_cache/
+poetry.lock
 
 # MacOS junk
 .DS_Store

@@ -1,0 +1,22 @@
+[project]
+name = "log-analyzer"
+version = "0.1.0"
+description = "otus-python-01-01_homework"
+authors = [
+    {name = "Mustafin_A",email = "pupenkinvas@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "iniconfig (==2.1.0)",
+    "markupsafe (==3.0.2)",
+    "packaging (==24.2)",
+    "pluggy (==1.5.0)",
+    "pytest (==8.3.5)",
+    "structlog (==25.2.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
