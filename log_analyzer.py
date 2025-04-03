@@ -84,7 +84,7 @@ def main():
     logger.info("Preparing report")
     try:
         logger.info("Preparing data for report")
-        report_data = prepare_data(result)
+        report_data = prepare_data(result, report_size)
         logger.info("Start forming report")
         form_report(
             report_data,
@@ -95,6 +95,7 @@ def main():
     except Exception as e:
         logger.error("Error while preparing "
                      f"report: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

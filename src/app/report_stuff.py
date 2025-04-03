@@ -10,7 +10,7 @@ def pretty_digitizer(digit):
         raise e
 
 
-def prepare_data(log_data):
+def prepare_data(log_data, report_size):
     """Function, that get a dict and born an appropriate list"""
     try:
         total_requests = log_data["total_requests"]
@@ -31,7 +31,8 @@ def prepare_data(log_data):
                 "time_max": pretty_digitizer(max(time_list)),
                 "time_med": pretty_digitizer(statistics.median(time_list))
             })
-        return result
+        result.sort(key=lambda x: float(x["time_sum"]), reverse=True)
+        return result[:report_size]
     except Exception as e:
         raise e
 
