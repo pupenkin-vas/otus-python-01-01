@@ -26,10 +26,11 @@ def configure_logger(app_name, log_level=logging.INFO, log_file='./app.log'):
     console_handler.setFormatter(console_formatter)
     logger.addHandler(console_handler)
 
-    os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    file_handler = logging.FileHandler(log_file)
-    file_formatter = logging.Formatter("%(message)s")
-    file_handler.setFormatter(file_formatter)
-    logger.addHandler(file_handler)
+    if log_file:
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+        file_handler = logging.FileHandler(log_file)
+        file_formatter = logging.Formatter("%(message)s")
+        file_handler.setFormatter(file_formatter)
+        logger.addHandler(file_handler)
 
     return logger

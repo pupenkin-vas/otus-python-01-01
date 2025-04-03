@@ -12,3 +12,4 @@ custom_config.ini
 # PYTHON-STUFF
 __pycache__/
 venv/
+.pytest_cache/
