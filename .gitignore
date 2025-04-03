@@ -13,3 +13,6 @@ custom_config.ini
 __pycache__/
 venv/
 .pytest_cache/
+
+# MacOS junk
+.DS_Store
