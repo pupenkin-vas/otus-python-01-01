@@ -14,7 +14,10 @@ def check_config_exists(filename):
     try:
         return os.path.isfile(filename)
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred "
+            + f"while checking existence of {filename}"
+        ) from e
 
 
 def read_config(config_path):
@@ -25,7 +28,9 @@ def read_config(config_path):
         variables = dict(config["DEFAULT"])
         return variables
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + f"while reading {config_path}"
+        ) from e
 
 
 def check_all_vars_set(available_vars):
@@ -34,5 +39,9 @@ def check_all_vars_set(available_vars):
         available_vars_set = set(available_vars)
         missing_vars = required_vars_set - available_vars_set
         return missing_vars
+    except TypeError:
+        raise TypeError("Available variables must be an iterable")
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " "while checking the variables"
+        ) from e

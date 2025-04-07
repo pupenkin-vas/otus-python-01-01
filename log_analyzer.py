@@ -66,11 +66,14 @@ def main():
         logger.error("Error while searching " f"recent log: {e}")
         sys.exit(1)
 
-    upcoming_report_path = (f"{report_dir}/report-{log_data[:4]}."
-                            + f"{log_data[4:6]}.{log_data[6:]}.html")
+    upcoming_report_path = (
+        f"{report_dir}/report-{log_data[:4]}."
+        + f"{log_data[4:6]}.{log_data[6:]}.html"
+    )
     if os.path.isfile(upcoming_report_path):
-        logger.info(f"{log_file} was parsed before."
-                    f" Check {upcoming_report_path}")
+        logger.info(
+            f"{log_file} was parsed before." f" Check {upcoming_report_path}"
+        )
         sys.exit(1)
 
     log_file_path = f"{log_dir}/{log_file}"

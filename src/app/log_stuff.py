@@ -11,8 +11,8 @@ LOG_LINE_REGEX = re.compile(
     r"\s\"(.*?)\s(.*?)\s(.*?)\""  # "request"
     r"\s(\d+)\s(\d+)\s\"(.*?)\""  # status sent ...
     r"\s\"(.*?)\"\s\"(.*?)\"\s\"(.*?)\"\s\"(.*?)\""
-    r"\s(\d+\.\d+)$"
-)  # request_time
+    r"\s(\d+\.\d+)$"  # request_time
+)
 
 
 def get_latest_log_file_name(log_dir, name_regex=FILE_NAME_REGEX):
@@ -23,8 +23,14 @@ def get_latest_log_file_name(log_dir, name_regex=FILE_NAME_REGEX):
             for f_name in os.listdir(log_dir)
             if name_regex.match(f_name)
         )
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"Directory not found: {log_dir}") from e
+    except ValueError as e:
+        raise ValueError("No matching log files found") from e
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + "while parsing log files"
+        ) from e
 
 
 def get_date_from_filename(filename):
@@ -33,8 +39,14 @@ def get_date_from_filename(filename):
         match = FILE_NAME_REGEX.match(filename)
         log_date = match.group(1)
         return log_date
+    except TypeError as e:
+        raise TypeError("Provided filename isn't string") from e
+    except ValueError as e:
+        raise ValueError("Filename incorrect") from e
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + "extracting data from filename"
+        ) from e
 
 
 def parse_log_content(log_file, line_regex=LOG_LINE_REGEX):
@@ -58,8 +70,14 @@ def parse_log_content(log_file, line_regex=LOG_LINE_REGEX):
             "total_requests": total_requests,
             "total_request_time": total_request_time,
         }
+    except (ValueError, TypeError) as e:
+        raise ValueError(
+            "Error parsing the log line. " + "Incorrect Value/Type"
+        ) from e
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + "while parsing log content"
+        ) from e
 
 
 def process_log(log_filename):
@@ -72,5 +90,9 @@ def process_log(log_filename):
                 return None
 
             return log_data
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"{log_filename} not found") from e
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + "while processing the log file."
+        ) from e

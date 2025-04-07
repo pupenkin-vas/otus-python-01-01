@@ -6,8 +6,12 @@ def pretty_digitizer(digit):
     """Function to transform ugly-non-human to readable"""
     try:
         return f"{digit:.6f}"
+    except (ValueError, TypeError) as e:
+        raise ValueError(f"Invalid input for pretty_digitizer: {e}") from e
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + "in pretty_digitizer"
+        ) from e
 
 
 def prepare_data(log_data, report_size):
@@ -35,8 +39,14 @@ def prepare_data(log_data, report_size):
             )
         result.sort(key=lambda x: float(x["time_sum"]), reverse=True)
         return result[:report_size]
+    except KeyError as e:
+        raise KeyError(f"Missing key in log_data: {e}") from e
+    except (ValueError, TypeError) as e:
+        raise ValueError("Error processing log data.") from e
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + "in prepare_data"
+        ) from e
 
 
 def form_report(data_result, report_dir, report_template_path, log_data):
@@ -51,5 +61,11 @@ def form_report(data_result, report_dir, report_template_path, log_data):
 
         with open(report_file_path, "w", encoding="utf-8") as f:
             f.write(html_report)
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"File not found: {e}") from e
+    except (ValueError, TypeError) as e:
+        raise ValueError("Error processing data for the report") from e
     except Exception as e:
-        raise e
+        raise RuntimeError(
+            "An unexpected error occurred " + "while forming the report"
+        ) from e
